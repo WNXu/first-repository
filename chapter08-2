@@ -1,0 +1,62 @@
+/*
+给定无序数组arr,元素可以为正、负、0，给定一个整数k，求arr所有子数组中累加和为k的最长子数组。
+*/
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class LongestSubArraySumToKWithAllKindNumber {
+
+	/**
+	 * 此数组包含正数，负数，0， 求和为给定元素的值；
+	 * 思想：
+	 * 1.创建map来存储Sum，初始map.put(0, 0);因为可能存在从第1--》i个位置元素的和为k；所以map.get(sum - k 此时(sum - k) == 0) = 0;
+	 * 2.从第一个位置开始求和sum；如果当前map中存在Sum - k,所以从sum - k 对应的最小的位置的下一个位置到第i个位置之和是k；比较当前i - map.get(sum - k) 与max的大小，取大的；
+	 * 3.如果map中不存在sum - k；再判断map中是否存在sum；应为map中的sum应该始终是第一存的最小的那个下标，所以如果存在，就不用再put了。
+	 * map中存的是sum和对应的下标；下标从1开始；
+	 * @param arr
+	 * @param k
+	 * @return
+	 */
+	public int getLongestSubArraySum(int[] arr, int k) {
+		if(arr == null || arr.length == 0) {
+			return -1;
+		} else {
+			int max = 0;
+			int len = arr.length;
+			int sum = 0;
+			int cur = 0;
+			Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+			map.put(0, 0);
+			for(int i = 1; i <= len; i++) {
+				sum += arr[i - 1];
+				if(map.containsKey(sum - k)) {
+					cur = i - map.get(sum - k);
+					if(cur > max) {
+						max = cur;
+					}
+				}
+				if(!map.containsKey(sum)) {
+					map.put(sum, i);
+				}
+
+			}
+			return max;
+		}
+	}  
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		LongestSubArraySumToKWithAllKindNumber an = new LongestSubArraySumToKWithAllKindNumber();
+		int[] arr = {1, 2, 3, 3, -3, 3, 3};
+		int k = 6;
+		int res = an.getLongestSubArraySum(arr, k);
+		System.out.println(res);
+	}
+
+}
